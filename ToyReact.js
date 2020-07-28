@@ -18,13 +18,36 @@ class ElementWrapper {
         this.root.setAttribute(name, value)
     }
 
+    // appendChild(vchild) {
+    //     vchild.mountTo(this.root)
+    // }
+
+    // 改造
     appendChild(vchild) {
-        vchild.mountTo(this.root)
+
+
+        let range = document.createRange();
+        if(this.root.children.length){
+            range.setStartAfter(this.root.lastChild)
+            range.setEndAfter(this.root.lastChild)
+        } else {
+            range.setStart(this.root,0)
+            range.setEnd(this.root,0)
+        }
+ 
+        vchild.mountTo(range)
     }
 
-    mountTo(parent) {
-        parent.appendChild(this.root)
+    // mountTo(parent) {
+    //     parent.appendChild(this.root)
+    // }
+
+    // 改造
+    mountTo(range) {
+        range.deleteContents()
+        range.insertNode(this.root)
     }
+
 }
 
 
@@ -34,8 +57,14 @@ class TextWrapper {
     }
 
 
-    mountTo(parent) {
-        parent.appendChild(this.root)
+    // mountTo(parent) {
+    //     parent.appendChild(this.root)
+    // }
+
+    // 改造
+    mountTo(range) {
+        range.deleteContents();
+        range.insertNode(this.root)
     }
 }
 
@@ -56,10 +85,24 @@ export class Component {
 
 
     }
-    mountTo(parent) {
-        let vdom = this.render()
-        vdom.mountTo(parent)
+    // mountTo(parent) {
+    //     let vdom = this.render()
+    //     vdom.mountTo(parent)
+    // }
+    // 改造
+    mountTo(range) {
+        
+        this.range = range; // 存起来
+        this.update()
+
     }
+    // 更新
+    update() {
+        this.range.deleteContents()
+        let vdom = this.render()
+        vdom.mountTo(this.range)
+    }
+
     appendChild(vchild) {
         this.children.push(vchild)
     }
@@ -86,7 +129,7 @@ export class Component {
         }
         merge(this.state, state)
         // console.log(this.state)
-        // this.update() // 难点，重新渲染实图
+        this.update() // 难点，重新渲染实图
     }
 }
 
@@ -134,7 +177,15 @@ export let ToyReact = {
     },
 
     render(vdom, element) {
-        vdom.mountTo(element)
+        let range = document.createRange();
+        if(element.children.length){
+            range.setStartAfter(element.lastChild)
+            range.setEndAfter(element.lastChild)
+        } else {
+            range.setStart(element,0)
+            range.setEnd(element,0)
+        }
+        vdom.mountTo(range)
     }
 }
 

@@ -15,7 +15,7 @@ class Square extends Component {
                 className="square"
                 onClick={() => this.setState({ value: 'X' })}
             >
-                {this.props.value}
+                {this.state.value ? this.state.value : null}
             </button>
         );
     }
