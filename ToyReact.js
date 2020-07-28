@@ -62,22 +62,30 @@ export let ToyReact = {
         //改进，用递归遍历子元素
         let insertChildren = (children) => {
             for (let child of children) {
-                if (typeof child === 'string') {
-                    child = new TextWrapper(child)
-                }
-                
-                if(typeof child === 'object' && child instanceof Array) {
+
+
+                if (typeof child === 'object' && child instanceof Array) {
                     insertChildren(child)
                 } else {
+                    // 处理 {true} 这种情况
+                    if (!(child instanceof Component)
+                        && !(child instanceof TextWrapper)
+                        && !(child instanceof ElementWrapper)) {
+                        child = String(child)
+                    }
+
+                    if (typeof child === 'string') {
+                        child = new TextWrapper(child)
+                    }
                     element.appendChild(child)
                 }
-                
+
             }
-            
+
         }
         insertChildren(children)
         return element;
-        
+
     },
 
     render(vdom, element) {

@@ -37,6 +37,7 @@ class MyComponent extends Component{
             <span>hello</span>
             <span>world</span>
             <div>
+                {true}
                 {this.children}
             </div>
         </div>
