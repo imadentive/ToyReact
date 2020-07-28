@@ -1,54 +1,63 @@
-import {ToyReact,Component} from './ToyReact.js'
-// class MyComponent {
-
-// }
-// let a = <MyComponent name="a" />
-
-// MyComponent 和 div 小写是有区别的
-// let a = <div name="a" id="ida">
-//     <span>hello</span>
-//     <span>world</span>
-//     <span>！</span>
-// </div>
-
-// console.log(a)
-
-/*
-var a = _ToyReact.ToyReact.createElement("div", {
-    name: "a",
-    id: "ida"
-  }, 
-  _ToyReact.ToyReact.createElement("span", null, "hello"), 
-  _ToyReact.ToyReact.createElement("span", null, "world"), 
-  _ToyReact.ToyReact.createElement("span", null, "\uFF01"))
-
-  */
-// document.body.appendChild(a)
-// var a = createElement(MyComponent, {
-//     name: "a"
-//   });
+import { ToyReact, Component } from './ToyReact.js'
 
 
-
-// 改进
-class MyComponent extends Component{
-    render(){
-        return <div>
-            <span>hello</span>
-            <span>world</span>
-            <div>
-                {true}
-                {this.children}
-            </div>
-        </div>
+class Square extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: null,
+        };
     }
-    
+
+    render() {
+        return (
+            <button
+                className="square"
+                onClick={() => this.setState({ value: 'X' })}
+            >
+                {this.props.value}
+            </button>
+        );
+    }
 }
 
-let a = <MyComponent name="a" id="ida">
-    <span>yes yes</span>
-    <span>no no</span>
-</MyComponent>
+
+class Board extends Component {
+
+
+    renderSquare(i) {
+        return (
+            <Square
+                value={i}
+
+            />
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                <div className="board-row">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                </div>
+            </div>
+        );
+    }
+}
+
+let a = <Board></Board>
 
 // 模仿react
 ToyReact.render(

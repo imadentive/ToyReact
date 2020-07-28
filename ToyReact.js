@@ -4,6 +4,17 @@ class ElementWrapper {
     }
 
     setAttribute(name, value) {
+
+        // 处理onClick 小技巧 [\s\S]表示所有字符
+        if (name.match(/^on([\s\S]+)$/)) {
+            console.log(RegExp.$1)
+            let eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase())
+            
+            this.root.addEventListener(eventName, value)
+        }
+
+        if (name === 'className')
+            name = 'class'
         this.root.setAttribute(name, value)
     }
 
@@ -32,9 +43,18 @@ export class Component {
     // 解决MyComponent下有子元素会报错
     constructor() {
         this.children = []
+        this.props = Object.create(null)
     }
     setAttribute(name, value) {
         this[name] = value
+        this.props[name] = value
+        // if (name.match(/^on([\s\S]+)$/)) {
+
+        //     console.log(RegExp.$1)
+
+        // }
+
+
     }
     mountTo(parent) {
         let vdom = this.render()
@@ -42,6 +62,31 @@ export class Component {
     }
     appendChild(vchild) {
         this.children.push(vchild)
+    }
+    setState(state) {
+        let merge = (oldState, newState) => {
+
+            for(let p in newState) {
+                if (typeof newState[p] === 'object') {
+                    if (typeof oldState[p] !== 'object') {
+                        oldState[p] = {}
+                    }
+                    merge(oldState[p], newState[p])
+                } else {
+                    oldState[p] = newState[p]
+                }
+
+            }
+
+            
+        }
+
+        if (!this.state && state) {
+            this.state = {}
+        }
+        merge(this.state, state)
+        // console.log(this.state)
+        // this.update() // 难点，重新渲染实图
     }
 }
 
