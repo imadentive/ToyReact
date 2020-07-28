@@ -1,4 +1,4 @@
-import {ToyReact} from './ToyReact.js'
+import {ToyReact,Component} from './ToyReact.js'
 // class MyComponent {
 
 // }
@@ -31,20 +31,23 @@ var a = _ToyReact.ToyReact.createElement("div", {
 
 
 // 改进
-class MyComponent {
+class MyComponent extends Component{
     render(){
-        return <div>cool</div>
+        return <div>
+            <span>hello</span>
+            <span>world</span>
+            <div>
+                {this.children}
+            </div>
+        </div>
     }
-    setAttribute(name,value) {
-        this[name] = value
-    }
-    mountTo(parent){
-        let vdom = this.render()
-        vdom.mountTo(parent)
-    }
+    
 }
 
-let a = <MyComponent name="a" id="ida"></MyComponent>
+let a = <MyComponent name="a" id="ida">
+    <span>yes yes</span>
+    <span>no no</span>
+</MyComponent>
 
 // 模仿react
 ToyReact.render(
