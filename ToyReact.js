@@ -156,13 +156,18 @@ export class Component {
     // 更新 修复bug
     update() {
         // 创建一个注释占位符
+        /*
         let placeholder = document.createComment('placeholder')
         let range = document.createRange()
         range.setStart(this.range.endContainer, this.range.endOffset)
         range.setEnd(this.range.endContainer, this.range.endOffset)
         range.insertNode(placeholder)
-
         this.range.deleteContents()
+
+        */
+
+        // 第一步改造成vdom之后，上面不需要了，删掉？？？why 秀啊
+
         let vdom = this.render()
         vdom.mountTo(this.range)
     }
