@@ -124,9 +124,14 @@ export class Component {
         let merge = (oldState, newState) => {
 
             for(let p in newState) {
-                if (typeof newState[p] === 'object') {
+                if (typeof newState[p] === 'object' && newState[p]!== null) {
                     if (typeof oldState[p] !== 'object') {
-                        oldState[p] = {}
+                        // oldState[p] = {}
+                        if(newState[p] instanceof Array){
+                            oldState[p] = []
+                        } else {
+                            oldState[p] = {}
+                        }
                     }
                     merge(oldState[p], newState[p])
                 } else {
@@ -169,6 +174,10 @@ export let ToyReact = {
                 if (typeof child === 'object' && child instanceof Array) {
                     insertChildren(child)
                 } else {
+                    // 处理 null
+                    if(child === null || child === void 0){
+                        child = ""
+                    }
                     // 处理 {true} 这种情况
                     if (!(child instanceof Component)
                         && !(child instanceof TextWrapper)
