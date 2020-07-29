@@ -1,15 +1,10 @@
 class ElementWrapper {
     constructor(type) {
-
-        // this.root = document.createElement(type)
-        this.type = type
-        this.props = Object.create(null)
-        this.children = []
+        this.root = document.createElement(type)
     }
 
     setAttribute(name, value) {
 
-        /*
         // 处理onClick 小技巧 [\s\S]表示所有字符
         if (name.match(/^on([\s\S]+)$/)) {
             console.log(RegExp.$1)
@@ -19,13 +14,8 @@ class ElementWrapper {
         }
 
         if (name === 'className')
-            this.root.setAttribute("class", value) 
-
+            name = 'class'
         this.root.setAttribute(name, value)
-
-        */
-
-        this.props[name] = value
     }
 
     // appendChild(vchild) {
@@ -35,7 +25,7 @@ class ElementWrapper {
     // 改造
     appendChild(vchild) {
 
-        /*
+
         let range = document.createRange();
         if(this.root.children.length){
             range.setStartAfter(this.root.lastChild)
@@ -46,9 +36,6 @@ class ElementWrapper {
         }
  
         vchild.mountTo(range)
-        */
-        this.children.push(vchild)
-
     }
 
     // mountTo(parent) {
@@ -58,44 +45,7 @@ class ElementWrapper {
     // 改造
     mountTo(range) {
         range.deleteContents()
-        let element = document.createElement(this.type)
-
-        // 上面setAttribute方法都工作
-        for (let name in this.props) {
-            let value = this.props[name]
-
-            if (name.match(/^on([\s\S]+)$/)) {
-                console.log(RegExp.$1)
-                let eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase())
-
-                element.addEventListener(eventName, value)
-            }
-
-            if (name === 'className')
-                element.setAttribute("class", value)
-
-
-            element.setAttribute(name, value)
-        }
-
-        // console.log(this.children)
-
-        // 上面appendChild的工作, 数组 for of 对象 for in
-        for (let child of this.children) {
-            let range = document.createRange();
-            if (element.children.length) {
-                range.setStartAfter(element.lastChild)
-                range.setEndAfter(element.lastChild)
-            } else {
-                range.setStart(element, 0)
-                range.setEnd(element, 0)
-            }
-
-            // console.log(child,'child')
-            child.mountTo(range)
-        }
-
-        range.insertNode(element)
+        range.insertNode(this.root)
     }
 
 }
@@ -111,7 +61,7 @@ class TextWrapper {
     //     parent.appendChild(this.root)
     // }
 
-    // 所有的实dom操作都在这里执行
+    // 改造
     mountTo(range) {
         range.deleteContents();
         range.insertNode(this.root)
@@ -141,7 +91,7 @@ export class Component {
     // }
     // 改造
     mountTo(range) {
-
+        
         this.range = range; // 存起来
         this.update()
 
@@ -173,11 +123,11 @@ export class Component {
     setState(state) {
         let merge = (oldState, newState) => {
 
-            for (let p in newState) {
-                if (typeof newState[p] === 'object' && newState[p] !== null) {
+            for(let p in newState) {
+                if (typeof newState[p] === 'object' && newState[p]!== null) {
                     if (typeof oldState[p] !== 'object') {
                         // oldState[p] = {}
-                        if (newState[p] instanceof Array) {
+                        if(newState[p] instanceof Array){
                             oldState[p] = []
                         } else {
                             oldState[p] = {}
@@ -190,7 +140,7 @@ export class Component {
 
             }
 
-
+            
         }
 
         if (!this.state && state) {
@@ -225,7 +175,7 @@ export let ToyReact = {
                     insertChildren(child)
                 } else {
                     // 处理 null
-                    if (child === null || child === void 0) {
+                    if(child === null || child === void 0){
                         child = ""
                     }
                     // 处理 {true} 这种情况
@@ -251,12 +201,12 @@ export let ToyReact = {
 
     render(vdom, element) {
         let range = document.createRange();
-        if (element.children.length) {
+        if(element.children.length){
             range.setStartAfter(element.lastChild)
             range.setEndAfter(element.lastChild)
         } else {
-            range.setStart(element, 0)
-            range.setEnd(element, 0)
+            range.setStart(element,0)
+            range.setEnd(element,0)
         }
         vdom.mountTo(range)
     }
