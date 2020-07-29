@@ -96,8 +96,22 @@ export class Component {
         this.update()
 
     }
-    // 更新
+    // // 更新
+    // update() {
+    //     this.range.deleteContents()
+    //     let vdom = this.render()
+    //     vdom.mountTo(this.range)
+    // }
+
+    // 更新 修复bug
     update() {
+        // 创建一个注释占位符
+        let placeholder = document.createComment('placeholder')
+        let range = document.createRange()
+        range.setStart(this.range.endContainer, this.range.endOffset)
+        range.setEnd(this.range.endContainer, this.range.endOffset)
+        range.insertNode(placeholder)
+
         this.range.deleteContents()
         let vdom = this.render()
         vdom.mountTo(this.range)
