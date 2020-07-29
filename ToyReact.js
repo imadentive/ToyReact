@@ -188,7 +188,7 @@ export class Component {
                     return false
                 }
                 for (const name in node1.props) {
-                    // 忽略onclick 和 数组属性的比较 ？？？ 如果做到和react一样局部更新某个dom节点 ？？？？
+                    // 忽略onclick 和 数组属性的比较 ？？？  如果做到和react一样局部更新某个dom节点 ？？？？
                     if(typeof node1.props[name] === "function" && typeof node2.props[name] === "function"
                      && node1.props[name].toString() === node2.props[name].toString())
                         continue;
